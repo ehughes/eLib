@@ -1,0 +1,4 @@
+D:\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.exe
+D:\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.pdb
+D:\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.exe
+D:\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.pdb

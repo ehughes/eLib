@@ -1,0 +1,403 @@
+Archive member included because of file (symbol)
+
+c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+                              ./src/cr_startup_lpc43xx.o (__main)
+
+Discarded input sections
+
+ .group         0x00000000        0x8 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .group         0x00000000        0x8 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .text          0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .data          0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .bss           0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .group         0x00000000        0x8 ./src/cr_startup_lpc43xx.o
+ .text          0x00000000        0x0 ./src/cr_startup_lpc43xx.o
+ .data          0x00000000        0x0 ./src/cr_startup_lpc43xx.o
+ .bss           0x00000000        0x0 ./src/cr_startup_lpc43xx.o
+ .debug_macro   0x00000000      0x88c ./src/cr_startup_lpc43xx.o
+ .group         0x00000000        0x8 ./src/crp.o
+ .group         0x00000000        0x8 ./src/crp.o
+ .text          0x00000000        0x0 ./src/crp.o
+ .data          0x00000000        0x0 ./src/crp.o
+ .bss           0x00000000        0x0 ./src/crp.o
+ .debug_macro   0x00000000      0x88c ./src/crp.o
+ .text          0x00000000        0x0 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+ .data          0x00000000        0x0 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+ .bss           0x00000000        0x0 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+MFlashA512       0x1a000000         0x00080000         xr
+MFlashB512       0x1b000000         0x00080000         xr
+RamLoc32         0x10000000         0x00008000         xrw
+RamLoc40         0x10080000         0x0000a000         xrw
+RamAHB32         0x20000000         0x00008000         xrw
+RamAHB16         0x20008000         0x00004000         xrw
+RamAHB_ETB16     0x2000c000         0x00004000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+LOAD ./src/cr_startup_lpc43xx.o
+LOAD ./src/crp.o
+START GROUP
+LOAD c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a
+LOAD c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7e-m/softfp\libcr_eabihelpers.a
+END GROUP
+                0x1a080000                __top_MFlashA512 = 0x1a080000
+                0x1b080000                __top_MFlashB512 = 0x1b080000
+                0x10008000                __top_RamLoc32 = 0x10008000
+                0x1008a000                __top_RamLoc40 = 0x1008a000
+                0x20008000                __top_RamAHB32 = 0x20008000
+                0x2000c000                __top_RamAHB16 = 0x2000c000
+                0x20010000                __top_RamAHB_ETB16 = 0x20010000
+
+.text_Flash2    0x1b000000        0x0
+ FILL mask 0xff
+ *(.text_Flash2*)
+ *(.text_MFlashB512*)
+ *(.text.$Flash2*)
+ *(.text.$MFlashB512*)
+ *(.rodata.$Flash2*)
+ *(.rodata.$MFlashB512*)
+
+.text           0x1a000000      0x3f8
+ FILL mask 0xff
+                0x1a000000                __vectors_start__ = ABSOLUTE (.)
+ *(.isr_vector)
+ .isr_vector    0x1a000000      0x114 ./src/cr_startup_lpc43xx.o
+                0x1a000000                g_pfnVectors
+                0x1a000114                . = ALIGN (0x4)
+                0x1a000114                __section_table_start = .
+                0x1a000114                __data_section_table = .
+                0x1a000114        0x4 LONG 0x1a0003f8 LOADADDR (.data)
+                0x1a000118        0x4 LONG 0x10000000 ADDR (.data)
+                0x1a00011c        0x4 LONG 0x0 SIZEOF (.data)
+                0x1a000120        0x4 LONG 0x1a0003f8 LOADADDR (.data_RAM2)
+                0x1a000124        0x4 LONG 0x10080000 ADDR (.data_RAM2)
+                0x1a000128        0x4 LONG 0x0 SIZEOF (.data_RAM2)
+                0x1a00012c        0x4 LONG 0x1a0003f8 LOADADDR (.data_RAM3)
+                0x1a000130        0x4 LONG 0x20000000 ADDR (.data_RAM3)
+                0x1a000134        0x4 LONG 0x0 SIZEOF (.data_RAM3)
+                0x1a000138        0x4 LONG 0x1a0003f8 LOADADDR (.data_RAM4)
+                0x1a00013c        0x4 LONG 0x20008000 ADDR (.data_RAM4)
+                0x1a000140        0x4 LONG 0x0 SIZEOF (.data_RAM4)
+                0x1a000144        0x4 LONG 0x1a0003f8 LOADADDR (.data_RAM5)
+                0x1a000148        0x4 LONG 0x2000c000 ADDR (.data_RAM5)
+                0x1a00014c        0x4 LONG 0x0 SIZEOF (.data_RAM5)
+                0x1a000150                __data_section_table_end = .
+                0x1a000150                __bss_section_table = .
+                0x1a000150        0x4 LONG 0x10000000 ADDR (.bss)
+                0x1a000154        0x4 LONG 0x4 SIZEOF (.bss)
+                0x1a000158        0x4 LONG 0x10080000 ADDR (.bss_RAM2)
+                0x1a00015c        0x4 LONG 0x0 SIZEOF (.bss_RAM2)
+                0x1a000160        0x4 LONG 0x20000000 ADDR (.bss_RAM3)
+                0x1a000164        0x4 LONG 0x0 SIZEOF (.bss_RAM3)
+                0x1a000168        0x4 LONG 0x20008000 ADDR (.bss_RAM4)
+                0x1a00016c        0x4 LONG 0x0 SIZEOF (.bss_RAM4)
+                0x1a000170        0x4 LONG 0x2000c000 ADDR (.bss_RAM5)
+                0x1a000174        0x4 LONG 0x0 SIZEOF (.bss_RAM5)
+                0x1a000178                __bss_section_table_end = .
+                0x1a000178                __section_table_end = .
+ *(.after_vectors*)
+ .after_vectors
+                0x1a000178       0xcc ./src/cr_startup_lpc43xx.o
+                0x1a000178                data_init
+                0x1a0001bc                bss_init
+                0x1a0001f4                NMI_Handler
+                0x1a0001fc                HardFault_Handler
+                0x1a000204                MemManage_Handler
+                0x1a00020c                BusFault_Handler
+                0x1a000214                UsageFault_Handler
+                0x1a00021c                SVC_Handler
+                0x1a000224                DebugMon_Handler
+                0x1a00022c                PendSV_Handler
+                0x1a000234                SysTick_Handler
+                0x1a00023c                I2C1_IRQHandler
+                0x1a00023c                UART1_IRQHandler
+                0x1a00023c                GPIO5_IRQHandler
+                0x1a00023c                CAN1_IRQHandler
+                0x1a00023c                USB1_IRQHandler
+                0x1a00023c                I2S0_IRQHandler
+                0x1a00023c                TIMER3_IRQHandler
+                0x1a00023c                UART0_IRQHandler
+                0x1a00023c                I2C0_IRQHandler
+                0x1a00023c                SGPIO_IRQHandler
+                0x1a00023c                ADC0_IRQHandler
+                0x1a00023c                FLASH_EEPROM_IRQHandler
+                0x1a00023c                GPIO6_IRQHandler
+                0x1a00023c                IntDefaultHandler
+                0x1a00023c                ATIMER_IRQHandler
+                0x1a00023c                SSP0_IRQHandler
+                0x1a00023c                ADC1_IRQHandler
+                0x1a00023c                RTC_IRQHandler
+                0x1a00023c                TIMER0_IRQHandler
+                0x1a00023c                SPI_IRQHandler
+                0x1a00023c                LCD_IRQHandler
+                0x1a00023c                VADC_IRQHandler
+                0x1a00023c                RIT_IRQHandler
+                0x1a00023c                TIMER1_IRQHandler
+                0x1a00023c                UART2_IRQHandler
+                0x1a00023c                GPIO2_IRQHandler
+                0x1a00023c                I2S1_IRQHandler
+                0x1a00023c                SSP1_IRQHandler
+                0x1a00023c                USB0_IRQHandler
+                0x1a00023c                GPIO3_IRQHandler
+                0x1a00023c                SCT_IRQHandler
+                0x1a00023c                GPIO1_IRQHandler
+                0x1a00023c                WDT_IRQHandler
+                0x1a00023c                SDIO_IRQHandler
+                0x1a00023c                GPIO7_IRQHandler
+                0x1a00023c                SPIFI_IRQHandler
+                0x1a00023c                QEI_IRQHandler
+                0x1a00023c                ETH_IRQHandler
+                0x1a00023c                M0CORE_IRQHandler
+                0x1a00023c                CAN0_IRQHandler
+                0x1a00023c                GINT0_IRQHandler
+                0x1a00023c                DAC_IRQHandler
+                0x1a00023c                M0SUB_IRQHandler
+                0x1a00023c                GPIO0_IRQHandler
+                0x1a00023c                DMA_IRQHandler
+                0x1a00023c                EVRT_IRQHandler
+                0x1a00023c                TIMER2_IRQHandler
+                0x1a00023c                UART3_IRQHandler
+                0x1a00023c                MCPWM_IRQHandler
+                0x1a00023c                GINT1_IRQHandler
+                0x1a00023c                GPIO4_IRQHandler
+                0x000002fc                . = 0x2fc
+ *fill*         0x1a000244       0xb8 ff
+                0x1a0002fc                PROVIDE (__CRP_WORD_START__, .)
+ *(.crp)
+ .crp           0x1a0002fc        0x4 ./src/crp.o
+                0x1a0002fc                CRP_WORD
+                0x1a000300                PROVIDE (__CRP_WORD_END__, .)
+                0x00000001                ASSERT (! ((__CRP_WORD_START__ == __CRP_WORD_END__)), Linker CRP Enabled, but no CRP_WORD provided within application)
+ *(.text*)
+ .text.main     0x1a000300       0x14 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+                0x1a000300                main
+ .text.ResetISR
+                0x1a000314       0xe0 ./src/cr_startup_lpc43xx.o
+                0x1a000314                ResetISR
+ .text.__weak_main
+                0x1a0003f4        0x4 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+                0x1a0003f4                __weak_main
+                0x1a0003f4                __main
+ *(.rodata .rodata.* .constdata .constdata.*)
+                0x1a0003f8                . = ALIGN (0x4)
+
+.glue_7         0x1a0003f8        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x1a0003f8        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x1a0003f8        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x1a0003f8        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x1a0003f8        0x0
+ .iplt          0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+
+.rel.dyn        0x1a0003f8        0x0
+ .rel.iplt      0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x1a0003f8                __exidx_start = .
+
+.ARM.exidx
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                0x1a0003f8                __exidx_end = .
+                0x1a0003f8                _etext = .
+
+.data_RAM2      0x10080000        0x0 load address 0x1a0003f8
+ FILL mask 0xff
+                0x10080000                PROVIDE (__start_data_RAM2, .)
+ *(.ramfunc.$RAM2)
+ *(.ramfunc.$RamLoc40)
+ *(.data.$RAM2*)
+ *(.data.$RamLoc40*)
+                0x10080000                . = ALIGN (0x4)
+                0x10080000                PROVIDE (__end_data_RAM2, .)
+
+.data_RAM3      0x20000000        0x0 load address 0x1a0003f8
+ FILL mask 0xff
+                0x20000000                PROVIDE (__start_data_RAM3, .)
+ *(.ramfunc.$RAM3)
+ *(.ramfunc.$RamAHB32)
+ *(.data.$RAM3*)
+ *(.data.$RamAHB32*)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                PROVIDE (__end_data_RAM3, .)
+
+.data_RAM4      0x20008000        0x0 load address 0x1a0003f8
+ FILL mask 0xff
+                0x20008000                PROVIDE (__start_data_RAM4, .)
+ *(.ramfunc.$RAM4)
+ *(.ramfunc.$RamAHB16)
+ *(.data.$RAM4*)
+ *(.data.$RamAHB16*)
+                0x20008000                . = ALIGN (0x4)
+                0x20008000                PROVIDE (__end_data_RAM4, .)
+
+.data_RAM5      0x2000c000        0x0 load address 0x1a0003f8
+ FILL mask 0xff
+                0x2000c000                PROVIDE (__start_data_RAM5, .)
+ *(.ramfunc.$RAM5)
+ *(.ramfunc.$RamAHB_ETB16)
+ *(.data.$RAM5*)
+ *(.data.$RamAHB_ETB16*)
+                0x2000c000                . = ALIGN (0x4)
+                0x2000c000                PROVIDE (__end_data_RAM5, .)
+
+.uninit_RESERVED
+                0x10000000        0x0
+ *(.bss.$RESERVED*)
+                0x10000000                . = ALIGN (0x4)
+                0x10000000                _end_uninit_RESERVED = .
+
+.data           0x10000000        0x0 load address 0x1a0003f8
+ FILL mask 0xff
+                0x10000000                _data = .
+ *(vtable)
+ *(.ramfunc*)
+ *(.data*)
+                0x10000000                . = ALIGN (0x4)
+                0x10000000                _edata = .
+
+.igot.plt       0x10000000        0x0 load address 0x1a0003f8
+ .igot.plt      0x00000000        0x0 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+
+.bss_RAM2       0x10080000        0x0
+                0x10080000                PROVIDE (__start_bss_RAM2, .)
+ *(.bss.$RAM2*)
+ *(.bss.$RamLoc40*)
+                0x10080000                . = ALIGN (0x4)
+                0x10080000                PROVIDE (__end_bss_RAM2, .)
+
+.bss_RAM3       0x20000000        0x0
+                0x20000000                PROVIDE (__start_bss_RAM3, .)
+ *(.bss.$RAM3*)
+ *(.bss.$RamAHB32*)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                PROVIDE (__end_bss_RAM3, .)
+
+.bss_RAM4       0x20008000        0x0
+                0x20008000                PROVIDE (__start_bss_RAM4, .)
+ *(.bss.$RAM4*)
+ *(.bss.$RamAHB16*)
+                0x20008000                . = ALIGN (0x4)
+                0x20008000                PROVIDE (__end_bss_RAM4, .)
+
+.bss_RAM5       0x2000c000        0x0
+                0x2000c000                PROVIDE (__start_bss_RAM5, .)
+ *(.bss.$RAM5*)
+ *(.bss.$RamAHB_ETB16*)
+                0x2000c000                . = ALIGN (0x4)
+                0x2000c000                PROVIDE (__end_bss_RAM5, .)
+
+.bss            0x10000000        0x4
+                0x10000000                _bss = .
+ *(.bss*)
+ .bss.i.3630    0x10000000        0x4 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ *(COMMON)
+                0x10000004                . = ALIGN (0x4)
+                0x10000004                _ebss = .
+                0x10000004                PROVIDE (end, .)
+
+.noinit_RAM2    0x10080000        0x0
+ *(.noinit.$RAM2*)
+ *(.noinit.$RamLoc40*)
+                0x10080000                . = ALIGN (0x4)
+
+.noinit_RAM3    0x20000000        0x0
+ *(.noinit.$RAM3*)
+ *(.noinit.$RamAHB32*)
+                0x20000000                . = ALIGN (0x4)
+
+.noinit_RAM4    0x20008000        0x0
+ *(.noinit.$RAM4*)
+ *(.noinit.$RamAHB16*)
+                0x20008000                . = ALIGN (0x4)
+
+.noinit_RAM5    0x2000c000        0x0
+ *(.noinit.$RAM5*)
+ *(.noinit.$RamAHB_ETB16*)
+                0x2000c000                . = ALIGN (0x4)
+
+.noinit         0x10000004        0x0
+                0x10000004                _noinit = .
+ *(.noinit*)
+                0x10000004                . = ALIGN (0x4)
+                0x10000004                _end_noinit = .
+                0x10000004                PROVIDE (_pvHeapStart, DEFINED (__user_heap_base)?__user_heap_base:.)
+                0x10008000                PROVIDE (_vStackTop, DEFINED (__user_stack_top)?__user_stack_top:(__top_RamLoc32 - 0x0))
+OUTPUT(MonkeyBootTestApp-InvalidMemoryRange.axf elf32-littlearm)
+
+.debug_info     0x00000000      0x33f
+ .debug_info    0x00000000       0x5f ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_info    0x0000005f      0x2a1 ./src/cr_startup_lpc43xx.o
+ .debug_info    0x00000300       0x3f ./src/crp.o
+
+.debug_abbrev   0x00000000      0x177
+ .debug_abbrev  0x00000000       0x54 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_abbrev  0x00000054       0xed ./src/cr_startup_lpc43xx.o
+ .debug_abbrev  0x00000141       0x36 ./src/crp.o
+
+.debug_aranges  0x00000000       0xb8
+ .debug_aranges
+                0x00000000       0x20 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_aranges
+                0x00000020       0x80 ./src/cr_startup_lpc43xx.o
+ .debug_aranges
+                0x000000a0       0x18 ./src/crp.o
+
+.debug_ranges   0x00000000       0x80
+ .debug_ranges  0x00000000       0x10 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_ranges  0x00000010       0x70 ./src/cr_startup_lpc43xx.o
+
+.debug_macro    0x00000000      0x993
+ .debug_macro   0x00000000       0x1a ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_macro   0x0000001a      0x88c ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_macro   0x000008a6       0x82 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_macro   0x00000928       0x1d ./src/cr_startup_lpc43xx.o
+ .debug_macro   0x00000945       0x1a ./src/crp.o
+ .debug_macro   0x0000095f       0x34 ./src/crp.o
+
+.debug_line     0x00000000      0x237
+ .debug_line    0x00000000       0xbc ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_line    0x000000bc      0x103 ./src/cr_startup_lpc43xx.o
+ .debug_line    0x000001bf       0x78 ./src/crp.o
+
+.debug_str      0x00000000     0x2c59
+ .debug_str     0x00000000     0x297f ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_str     0x0000297f      0x1f1 ./src/cr_startup_lpc43xx.o
+                               0x270c (size before relaxing)
+ .debug_str     0x00002b70       0xe9 ./src/crp.o
+                               0x25f9 (size before relaxing)
+
+.comment        0x00000000       0x70
+ .comment       0x00000000       0x70 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+                                 0x71 (size before relaxing)
+ .comment       0x00000000       0x71 ./src/cr_startup_lpc43xx.o
+ .comment       0x00000000       0x71 ./src/crp.o
+ .comment       0x00000000       0x71 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+
+.ARM.attributes
+                0x00000000       0x37
+ .ARM.attributes
+                0x00000000       0x37 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .ARM.attributes
+                0x00000037       0x37 ./src/cr_startup_lpc43xx.o
+ .ARM.attributes
+                0x0000006e       0x37 ./src/crp.o
+ .ARM.attributes
+                0x000000a5       0x37 c:/nxp/lpcxpresso_7.7.2_379/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7e-m/softfp\libcr_c.a(__weak__main.o)
+
+.debug_frame    0x00000000      0x198
+ .debug_frame   0x00000000       0x28 ./src/MonkeyBootTestApp-InvalidMemoryRange.o
+ .debug_frame   0x00000028      0x170 ./src/cr_startup_lpc43xx.o

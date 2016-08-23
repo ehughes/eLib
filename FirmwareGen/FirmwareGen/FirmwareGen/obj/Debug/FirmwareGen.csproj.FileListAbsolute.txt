@@ -1,0 +1,8 @@
+C:\Users\emh203\Desktop\FirmwareGen\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.exe.config
+C:\Users\emh203\Desktop\FirmwareGen\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.exe
+C:\Users\emh203\Desktop\FirmwareGen\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.pdb
+C:\Users\emh203\Desktop\FirmwareGen\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.exe
+C:\Users\emh203\Desktop\FirmwareGen\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.pdb
+C:\Users\emh203\Google Drive\FirmwareGen\FirmwareGen\FirmwareGen\bin\Debug\FirmwareGen.exe.config
+C:\Users\emh203\Google Drive\FirmwareGen\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.exe
+C:\Users\emh203\Google Drive\FirmwareGen\FirmwareGen\FirmwareGen\obj\Debug\FirmwareGen.pdb

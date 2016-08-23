@@ -1,0 +1,5 @@
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_VersionMerge.exe.config
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_VersionMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_VersionMerge.pdb
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\obj\Debug\iHEX_VersionMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\obj\Debug\iHEX_VersionMerge.pdb

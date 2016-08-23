@@ -1,0 +1,28 @@
+﻿Build started 7/18/2015 8:01:28 PM.
+     1>Project "Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\ScrambledEggs\ScrambledEggs.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ihex.c ScrambledEggs.c
+         ScrambledEggs.c
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(54): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(62): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(304) : see declaration of 'sscanf'
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(65): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(66): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(74): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : see declaration of 'fopen'
+     1>z:\dropbox\elib\monkeyboot\src\scrambledeggs\scrambledeggs\scrambledeggs\scrambledeggs.c(82): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : see declaration of 'fopen'
+         ihex.c
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\Debug\ScrambledEggs.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\Debug\ScrambledEggs.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\Debug\ScrambledEggs.lib" /MACHINE:X86 Debug\ihex.obj
+         Debug\ScrambledEggs.obj
+         ScrambledEggs.vcxproj -> Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\Debug\ScrambledEggs.exe
+     1>Done Building Project "Z:\Dropbox\eLib\MonkeyBoot\SRC\ScrambledEggs\ScrambledEggs\ScrambledEggs\ScrambledEggs.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.62

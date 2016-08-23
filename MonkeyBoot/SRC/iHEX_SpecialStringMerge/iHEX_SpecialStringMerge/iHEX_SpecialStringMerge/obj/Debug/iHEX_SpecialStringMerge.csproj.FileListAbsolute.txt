@@ -1,0 +1,11 @@
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_SpecialStringMerge.exe.config
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_SpecialStringMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\bin\Debug\iHEX_SpecialStringMerge.pdb
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\obj\Debug\iHEX_SpecialStringMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_VersionMerge\iHEX_VersionMerge\iHEX_VersionMerge\obj\Debug\iHEX_SpecialStringMerge.pdb
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\bin\Debug\iHEX_SpecialStringMerge.exe.config
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\obj\Debug\iHEX_SpecialStringMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\obj\Debug\iHEX_SpecialStringMerge.pdb
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\bin\Debug\iHEX_SpecialStringMerge.exe
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\bin\Debug\iHEX_SpecialStringMerge.pdb
+Z:\Dropbox\eLib\MonkeyBoot\SRC\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\iHEX_SpecialStringMerge\obj\Debug\iHEX_SpecialStringMerge.csprojResolveAssemblyReference.cache

@@ -1,0 +1,2 @@
+arm-none-eabi-gcc -E -dM -DFUNCTION_PROFILE=${ConfigName} "${ProjDirPath}/Code/DataLoggerConfiguration.h" > "${ProjDirPath}/${ConfigName}/symbols.txt"
+"${ProjDirPath}/"FirmwareGen.exe ${BuildArtifactFileBaseName}.bin symbols.txt "../../BIN/${ConfigName}"
