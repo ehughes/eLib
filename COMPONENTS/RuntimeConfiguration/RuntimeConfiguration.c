@@ -1,13 +1,12 @@
-#include "System.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "ctype.h"
-#include "RuntimeConfig.h"
+#include "RuntimeConfiguration.h"
 #include "Components/SHELL/SHELL.h"
 
-#ifndef TERMINAL_PRINTF
-        #define TERMINAL_PRINTF(...)   SHELL_printf(&MySerialShell,__VA_ARGS__)
+#ifndef RT_CONFIG_DEBUG
+        #define RT_CONFIG_DEBUG(...)   SHELL_printf(&MySerialShell,__VA_ARGS__)
 #endif
 
 #ifndef FALSE
@@ -18,257 +17,10 @@
         #define TRUE    1
 #endif
 
-EEPROM_Settings MyEEPROM_Settings;
-
-int32_t EEPROM_Load()
-{
-/*
-        memcpy(&MyEEPROM_Settings,(void *)FSL_FEATURE_EEPROM_BASE_ADDRESS,sizeof(MyEEPROM_Settings));
-
-        if(MyEEPROM_Settings.EEPROM_MagicKey != EEPROM_MAGIC_KEY)
-        {
-                strncpy(MyEEPROM_Settings.DoB,"N/A",sizeof(MyEEPROM_Settings.DoB));
-                strncpy(MyEEPROM_Settings.HW_ID,"N/A",sizeof(MyEEPROM_Settings.HW_ID));
-                strncpy(MyEEPROM_Settings.SN,"N/A",sizeof(MyEEPROM_Settings.SN));
-
-
-                return EEPROM_INVALID;
-        }
-        else
-        {
-                return EEPROM_OK;
-        }
-        */
-
-        return EEPROM_OK;
-}
-
-int32_t EEPROM_Save()
-{
-    //MyEEPROM_Settings.EEPROM_MagicKey = EEPROM_MAGIC_KEY;
-//      EEPROM_WritePage(EEPROM, 0, (uint32_t *)&MyEEPROM_Settings);
-     return EEPROM_OK;
-}
-
-uint32_t ConfigFile_EnableRelay;
-char ConfigFile_Subnet[CONFIG_MAX_VALUE_STRING_LENGTH];
-char ConfigFile_Application[CONFIG_MAX_VALUE_STRING_LENGTH];
-
-uint16_t ConfigFile_UnicastAddrBase4Ch;
-
-uint16_t ConfigFile_SensorPubAddr;
-uint16_t ConfigFile_SubAddr;
-
-uint8_t  ConfigFile_EnableBeep;
-
-#if USE_BRIDGE == 1
-     
-     uint32_t ConfigFile_CustomerID;
-     uint32_t ConfigFile_BridgeID;
-   
-     char ConfigFile_AzureHost[CONFIG_MAX_VALUE_STRING_LENGTH];
-     char ConfigFile_AzureKey[CONFIG_MAX_VALUE_STRING_LENGTH];
-     char ConfigFile_AzureDeviceID[CONFIG_MAX_VALUE_STRING_LENGTH];
-    
-     char ConfigFile_TimeServer0[64];
-     char ConfigFile_TimeServer1[64];
-     char ConfigFile_TimeServer2[64];
-     char ConfigFile_TimeServer3[64];
-
-     uint32_t ConfigFile_JackID[4];
-
-#endif
-
-const ConfigurationItem  MyConfigurationItems[] =
-{
-
-        {
-                "EnableBeep",
-                "Enable Beep Feedback",
-                (void *)(&ConfigFile_EnableBeep),
-                DATA_TYPE_UINT_8,
-                "0","255","1",
-                "Bridge"
-        },
-        {
-                "TimeServer0",
-                "NTP Server Option 0",
-                (void *)(&ConfigFile_TimeServer0),
-                DATA_TYPE_STRING,
-                "","","time.nist.gov",
-                "Bridge"
-        },
-        {
-                "TimeServer1",
-                "NTP Server Option 1",
-                (void *)(&ConfigFile_TimeServer1),
-                DATA_TYPE_STRING,
-                "","","time.google.com",
-                "Bridge"
-        },
-        {
-                "TimeServer2",
-                "NTP Server Option 2",
-                (void *)(&ConfigFile_TimeServer2),
-                DATA_TYPE_STRING,
-                "","","time.windows.com",
-                "Bridge"
-        },
-        {
-                "TimeServer3",
-                "NTP Server Option 3",
-                (void *)(&ConfigFile_TimeServer3),
-                DATA_TYPE_STRING,
-                "","","pool.ntp.org",
-                "Bridge"
-        },
-
-
-
-     #if USE_BRIDGE == 1
-  
-       {
-                "CustomerID",
-                "CustomerID For this bridge",
-                (void *)(&ConfigFile_CustomerID),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","1",
-                "Bridge"
-        },
-
-        
-
-         {
-                "BridgeID",
-                "Bridge ID for this bridge",
-                (void *)(&ConfigFile_BridgeID),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","1",
-                "Bridge"
-        },
-
-        {
-                "JackID-A",
-                "Physical JackID for Channel Aon on the box",
-                (void *)(&ConfigFile_JackID[0]),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","1",
-                "Bridge"
-        },
-        {
-                "JackID-B",
-                "Physical JackID for Channel B on on the box",
-                (void *)(&ConfigFile_JackID[1]),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","2",
-                "Bridge"
-        },
-        {
-                "JackID-C",
-                "Physical JackID for Channel C on on the box",
-                (void *)(&ConfigFile_JackID[2]),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","3",
-                "Bridge"
-        },
-        {
-                "JackID-D",
-                "Physical JackID for Channel D on on the box",
-                (void *)(&ConfigFile_JackID[3]),
-                DATA_TYPE_UINT_32,
-                "0","4294967295","4",
-                "Bridge"
-        },
-
-
-        {
-                "AzureHost",
-                "Address of the IOT Hub",
-                (void *)(&ConfigFile_AzureHost),
-                DATA_TYPE_STRING,
-                "","","tz-brew.azure-devices.net",
-                "Bridge"
-        },
-
-        {
-                "AzureKey",
-                "Key for IOT Hub",
-                (void *)(&ConfigFile_AzureKey),
-                DATA_TYPE_STRING,
-                "","","jVRejSEFpliuv2q7XTcO9G4qmC0GSyNqvPYFWmnZap8=",
-                "Bridge"
-        },
-
-        {
-                "AzureDeviceID",
-                "IOT Hub Device Name",
-                (void *)(&ConfigFile_AzureDeviceID),
-                DATA_TYPE_STRING,
-                "","","ThePrancingPony",
-                "Bridge"
-        },
-
-     #endif
-
-        {
-                "EnableRelay",
-                "Make this node a relay",
-                (void *)(&ConfigFile_EnableRelay),
-                DATA_TYPE_UINT_32,
-                #if RELAY_IS_ON_BY_DEFAULT == 1
-                    "0","1","1",
-                #else
-                    "0","1","0",
-                #endif
-                "Mesh"
-        },
-        {
-                "NetKey",
-                "Subnet Key for this node",
-                (void *)(&ConfigFile_Subnet),
-                DATA_TYPE_STRING,
-                "","","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                "Mesh"
-        },
-        {
-                "AppKey",
-                "Application Key for this node",
-                (void *)(&ConfigFile_Application),
-                DATA_TYPE_STRING,
-                "","","BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-                "Mesh"
-        },
-        {
-                "UnicastAddrBase4Ch",
-                "Base Local Unicast Address for the 4Channel function (Decimal)",
-                (void *)(&ConfigFile_UnicastAddrBase4Ch),
-                DATA_TYPE_UINT_16,
-                "1","32763",32763,
-                "Mesh"
-        },
-        {
-                "SensorPubAddr",
-                "Publication Address for the Sensor Server",
-                (void *)(&ConfigFile_SensorPubAddr),
-                DATA_TYPE_UINT_16,
-                "1","65536","49152",
-                "Mesh"
-        },
-        {
-                "SubAddr",
-                "Subscription Address",
-                (void *)(&ConfigFile_SubAddr),
-                DATA_TYPE_UINT_16,
-                "1","65536","49152",
-                "Mesh"
-        },
-
-
-};
-
-#define NUM_CONFIGURATION_ITEMS sizeof(MyConfigurationItems)/sizeof(ConfigurationItem)
 
 char *SectionName[MAX_SECTIONS];
+
+char ValueString[CONFIG_MAX_VALUE_STRING_LENGTH];
 
 typedef union
 {
@@ -283,19 +35,34 @@ typedef union
 } ValueHolder;
 
 
-void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *value, uint8_t PostToTerminal);
+void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *value);
 
+
+int32_t Configuration_GetCount(ConfigurationItem *ConfigList)
+{
+    int i =0;
+
+    while(
+          ((void *)(ConfigList[i].Name) != (void *)(0)) && 
+          (i<CONFIG_MAX_LIST_LENGTH)
+          )
+    {
+        i++; 
+    }
+
+  return i;
+}
 
 /*
  * Finds a configuration item by index
  * returns CONFIGURATION_ITEM_NOT_FOUND (-1) if it does not exist
  */
 
-int32_t Configuration_GetIndex(char * Name)
+int32_t Configuration_GetIndex(ConfigurationItem *ConfigList, char * Name)
 {
-        for (int i=0;i<NUM_CONFIGURATION_ITEMS;i++)
+        for (int i=0;i<Configuration_GetCount(ConfigList);i++)
         {
-                if(strcmp(Name,MyConfigurationItems[i].Name) == 0)
+                if(strcmp(Name,ConfigList[i].Name) == 0)
                 {
                         return i;
                 }
@@ -304,76 +71,74 @@ int32_t Configuration_GetIndex(char * Name)
         return CONFIGURATION_ITEM_NOT_FOUND;
 }
 
-int32_t Configuration_SetByName(char * Name,void * Value)
+int32_t Configuration_SetByName(ConfigurationItem *ConfigList,char * Name,void * Value)
 {
-        int32_t Index = -1;
+        int32_t Index = CONFIGURATION_ITEM_NOT_FOUND;
 
-        if( (Index = Configuration_GetIndex(Name)) == CONFIGURATION_ITEM_NOT_FOUND)
+        if( (Index = Configuration_GetIndex(ConfigList,Name)) > 0)
         {
-                return CONFIGURATION_ITEM_NOT_FOUND;
-        }
-        else
-        {
-                Configuration_LoadWithValue((ConfigurationItem *)&MyConfigurationItems[Index],Value, FALSE);
+
+                Configuration_LoadWithValue((ConfigurationItem *)&ConfigList[Index],Value);
         }
 
         return Index;
 }
 
-char ValueString[CONFIG_MAX_VALUE_STRING_LENGTH];
 
-char * Configuration_GetValueString(char * Name)
+
+char * Configuration_GetValueString(ConfigurationItem *ConfigList,char * Name)
 {
-        int32_t Index = -1;
-    ValueHolder V;
+      int32_t Index = CONFIGURATION_ITEM_NOT_FOUND;
+  
+      ValueHolder V;
 
-        if( (Index = Configuration_GetIndex(Name)) == CONFIGURATION_ITEM_NOT_FOUND)
+        if( (Index = Configuration_GetIndex(ConfigList,Name)) == CONFIGURATION_ITEM_NOT_FOUND)
         {
                 return NULL;
         }
         else
         {
-                  switch(MyConfigurationItems[Index].DataType)
+                  switch(ConfigList[Index].DataType)
                   {
                       default:
                           break;
 
                       case DATA_TYPE_STRING:
-                          snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%s",(char *)MyConfigurationItems[Index].Value);
+                          snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%s",(char *)ConfigList[Index].Value);
                           break;
 
                       case DATA_TYPE_UINT_8:
-                          V.uint32_t_Value = *((uint8_t *)MyConfigurationItems[Index].Value);
+                          V.uint32_t_Value = *((uint8_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%u", (unsigned int)V.uint32_t_Value);
                           break;
 
                       case DATA_TYPE_UINT_16:
-                          V.uint32_t_Value = *((uint16_t *)MyConfigurationItems[Index].Value);
+                          V.uint32_t_Value = *((uint16_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%u",(unsigned int)V.uint32_t_Value);
                           break;
 
                       case DATA_TYPE_UINT_32:
-                          V.uint32_t_Value = *((uint32_t *)MyConfigurationItems[Index].Value);
+                          V.uint32_t_Value = *((uint32_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%u",(unsigned int)V.uint32_t_Value);
                           break;
 
                       case DATA_TYPE_INT_8:
-                          V.int32_t_Value = *((int8_t *)MyConfigurationItems[Index].Value);
+                          V.int32_t_Value = *((int8_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%d",(int)V.int32_t_Value);
                           break;
 
                       case DATA_TYPE_INT_16:
-                          V.int32_t_Value = *((int16_t *)MyConfigurationItems[Index].Value);
+                          V.int32_t_Value = *((int16_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%d",(int)V.int32_t_Value);
                           break;
 
                       case DATA_TYPE_INT_32:
-                          V.int32_t_Value = *((int32_t *)MyConfigurationItems[Index].Value);
+                          V.int32_t_Value = *((int32_t *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%d",(int)V.int32_t_Value);
                           break;
 
                       case DATA_TYPE_FLOAT_32:
-                          V.float_Value = *((float *)MyConfigurationItems[Index].Value);
+                          V.float_Value = *((float *)ConfigList[Index].Value);
                           snprintf(&ValueString[0],CONFIG_MAX_VALUE_STRING_LENGTH,"%f",V.float_Value);
                           break;
                   }
@@ -383,12 +148,7 @@ char * Configuration_GetValueString(char * Name)
 }
 
 
-uint32_t Configuration_GetNumItems()
-{
-        return  sizeof(MyConfigurationItems)/sizeof(ConfigurationItem);
-}
-
-void Configuration_GetSectionNames()
+void Configuration_GetSectionNames(ConfigurationItem *ConfigList)
 {
     uint32_t i,j,CurrentSection = 0;
     uint8_t MatchFound = 0;
@@ -401,13 +161,13 @@ void Configuration_GetSectionNames()
 
     //Loop through each Config item and see if there is a section in the table
 
-    for(i=0; i<NUM_CONFIGURATION_ITEMS; i++)
+    for(i=0; i<Configuration_GetCount(ConfigList); i++)
         {
             MatchFound = 0;
 
             for(j=0; j<CurrentSection; j++)
                 {
-                    if(strcmp(MyConfigurationItems[i].iniSection,SectionName[j]) == 0)
+                    if(strcmp(ConfigList[i].iniSection,SectionName[j]) == 0)
                         {
                             MatchFound = 1;
                             break;
@@ -416,7 +176,7 @@ void Configuration_GetSectionNames()
 
             if(MatchFound == 0)
                 {
-                    SectionName[CurrentSection++] = MyConfigurationItems[i].iniSection;
+                    SectionName[CurrentSection++] = ConfigList[i].iniSection;
                 }
 
             if(CurrentSection == MAX_SECTIONS)
@@ -427,19 +187,19 @@ void Configuration_GetSectionNames()
 
 int iniLineHandler(void *user, const char *section, const char *name,const char *value);
 
-void Configuration_LoadDefaults()
+void Configuration_LoadDefaults(ConfigurationItem *ConfigList)
 {
     uint32_t i;
 
-    for(i=0; i<NUM_CONFIGURATION_ITEMS; i++)
+    for(i=0; i<Configuration_GetCount(ConfigList); i++)
         {
-            Configuration_LoadWithValue((ConfigurationItem *)&MyConfigurationItems[i],MyConfigurationItems[i].Default, FALSE);
+            Configuration_LoadWithValue((ConfigurationItem *)&ConfigList[i],ConfigList[i].Default);
         }
 }
 
 char sBuf[64];
 
-int32_t Configuration_Export(char *FileName)
+int32_t Configuration_Export(ConfigurationItem *ConfigList,char *FileName)
 {
     uint32_t i = 0,j;
     FIL   F;
@@ -447,65 +207,66 @@ int32_t Configuration_Export(char *FileName)
 
     if (f_open(&F, FileName,FA_CREATE_ALWAYS| FA_WRITE) != FR_OK)
         {
-            TERMINAL_PRINTF("Could not open file for writing\r\n");
+            RT_CONFIG_DEBUG("Could not open file for writing\r\n");
             return -1;
         }
 
         i = 0;
     //handle the generic structure
-    Configuration_GetSectionNames();
+    Configuration_GetSectionNames(ConfigList);
+
     while((SectionName[i] != NULL) && (i<MAX_SECTIONS))
         {
             f_printf(&F,"[%s]\r\n\r\n",SectionName[i]);
 
-            for(j=0; j<NUM_CONFIGURATION_ITEMS; j++)
+            for(j=0; j<Configuration_GetCount(ConfigList); j++)
                 {
-                    if(strcmp(SectionName[i],MyConfigurationItems[j].iniSection) == 0)
+                    if(strcmp(SectionName[i],ConfigList[j].iniSection) == 0)
                         {
-                            switch(MyConfigurationItems[j].DataType)
+                            switch(ConfigList[j].DataType)
                                 {
                                     default:
                                         break;
 
                                     case DATA_TYPE_STRING:
-                                        f_printf(&F,"%s = %s\r\n",(char *)MyConfigurationItems[j].Name,(char *)MyConfigurationItems[j].Value);
+                                        f_printf(&F,"%s = %s\r\n",(char *)ConfigList[j].Name,(char *)ConfigList[j].Value);
                                         break;
 
                                     case DATA_TYPE_UINT_8:
-                                        V.uint32_t_Value = *((uint8_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name, V.uint32_t_Value);
+                                        V.uint32_t_Value = *((uint8_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name, V.uint32_t_Value);
                                         break;
 
                                     case DATA_TYPE_UINT_16:
-                                        V.uint32_t_Value = *((uint16_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name,V.uint32_t_Value);
+                                        V.uint32_t_Value = *((uint16_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name,V.uint32_t_Value);
                                         break;
 
                                     case DATA_TYPE_UINT_32:
-                                        V.uint32_t_Value = *((uint32_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name,V.uint32_t_Value);
+                                        V.uint32_t_Value = *((uint32_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name,V.uint32_t_Value);
                                         break;
 
                                     case DATA_TYPE_INT_8:
-                                        V.int32_t_Value = *((int8_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name,V.int32_t_Value);
+                                        V.int32_t_Value = *((int8_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name,V.int32_t_Value);
                                         break;
 
                                     case DATA_TYPE_INT_16:
-                                        V.int32_t_Value = *((int16_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name,V.int32_t_Value);
+                                        V.int32_t_Value = *((int16_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name,V.int32_t_Value);
                                         break;
 
                                     case DATA_TYPE_INT_32:
-                                        V.int32_t_Value = *((int32_t *)MyConfigurationItems[j].Value);
-                                        f_printf(&F,"%s = %d\r\n",(char *)MyConfigurationItems[j].Name,V.int32_t_Value);
+                                        V.int32_t_Value = *((int32_t *)ConfigList[j].Value);
+                                        f_printf(&F,"%s = %d\r\n",(char *)ConfigList[j].Name,V.int32_t_Value);
                                         break;
 
                                     case DATA_TYPE_FLOAT_32:
 
-                                        V.float_Value = *((float *)MyConfigurationItems[j].Value);
+                                        V.float_Value = *((float *)ConfigList[j].Value);
                                         sprintf(sBuf,"%f",V.float_Value);
-                                        f_printf(&F,"%s = %s\r\n",(char *)MyConfigurationItems[j].Name,(char *)sBuf);
+                                        f_printf(&F,"%s = %s\r\n",(char *)ConfigList[j].Name,(char *)sBuf);
                                         break;
                                 }
                         }
@@ -521,14 +282,13 @@ int32_t Configuration_Export(char *FileName)
     return 0;
 }
 
-int32_t  Configuration_Load(char * FileName)
+int32_t  Configuration_Load(ConfigurationItem *ConfigList, char * FileName)
 {
-    Configuration_LoadDefaults();
+    Configuration_LoadDefaults(ConfigList);
 
-    if (ini_parse(FileName,iniLineHandler, (void *)&MyConfigurationItems) < 0)
+    if (ini_parse(FileName,iniLineHandler, (void *)ConfigList) < 0)
         {
                 return -1;
-
         }
     else
         {
@@ -544,20 +304,20 @@ int iniLineHandler(void *user, const char *section, const char *name,const char 
 
  #define MATCH_SECTION_AND_NAME(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 
- for(i=0; i<NUM_CONFIGURATION_ITEMS; i++)
+       for(i=0; i<Configuration_GetCount(NextCI); i++)
         {
-                if(MATCH_SECTION_AND_NAME(NextCI[i].iniSection,NextCI[i].Name))
-                        {
-                                //IF we are here we have a match on the section
-                                //Load the data
-                                Configuration_LoadWithValue(&NextCI[i],(void *)value,false);
-                        }
+             if(MATCH_SECTION_AND_NAME(NextCI[i].iniSection,NextCI[i].Name))
+             {
+                 //IF we are here we have a match on the section
+                 //Load the data
+                 Configuration_LoadWithValue(&NextCI[i],(void *)value);
+             }
         }
 
     return 0;
 }
 
-void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *value, uint8_t PostToTerminal)
+void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *value)
 {
     ValueHolder MyValueHolder;
     ValueHolder Max;
@@ -566,16 +326,15 @@ void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *
     switch(NextConfigurationItem->DataType)
         {
             default:
-                if(PostToTerminal == TRUE)
-                    TERMINAL_PRINTF("Unknown Configuration Data type of %i\r\n",NextConfigurationItem->DataType);
+              
+                RT_CONFIG_DEBUG("Unknown Configuration Data type of %i\r\n",NextConfigurationItem->DataType);
 
                 break;
 
             case  DATA_TYPE_STRING:
                 strcpy((char *)NextConfigurationItem->Value,(const char *)value);
 
-                if(PostToTerminal == TRUE)
-                    TERMINAL_PRINTF("%s loaded with value of %s\r\n",NextConfigurationItem->Name,value);
+                RT_CONFIG_DEBUG("%s loaded with value of %s\r\n",NextConfigurationItem->Name,value);
 
                 break;
 
@@ -605,23 +364,17 @@ void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *
                 if(NextConfigurationItem->DataType == DATA_TYPE_UINT_8)
                     {
                         *((uint8_t *)NextConfigurationItem->Value) = (uint8_t)MyValueHolder.uint32_t_Value;
-
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint8_t *)NextConfigurationItem->Value));
+                        RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint8_t *)NextConfigurationItem->Value));
                     }
                 else  if(NextConfigurationItem->DataType == DATA_TYPE_UINT_16)
                     {
                         *((uint16_t *)NextConfigurationItem->Value) = (uint16_t)MyValueHolder.uint32_t_Value;
-
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint16_t *)NextConfigurationItem->Value));
+                        RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint16_t *)NextConfigurationItem->Value));
                     }
                 else  if(NextConfigurationItem->DataType == DATA_TYPE_UINT_32)
                     {
                         *((uint32_t *)NextConfigurationItem->Value) = (uint32_t)MyValueHolder.uint32_t_Value;
-
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint32_t *)NextConfigurationItem->Value));
+                         RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((uint32_t *)NextConfigurationItem->Value));
                     }
 
                 break;
@@ -651,23 +404,19 @@ void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *
                 if(NextConfigurationItem->DataType == DATA_TYPE_INT_8)
                     {
                         *((int8_t *)NextConfigurationItem->Value) = (int8_t)MyValueHolder.int32_t_Value;
-
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int8_t *)NextConfigurationItem->Value));
+                         RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int8_t *)NextConfigurationItem->Value));
                     }
                 else  if(NextConfigurationItem->DataType == DATA_TYPE_INT_16)
                     {
                         *((int16_t *)NextConfigurationItem->Value) = (int16_t)MyValueHolder.int32_t_Value;
 
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int16_t *)NextConfigurationItem->Value));
+                        RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int16_t *)NextConfigurationItem->Value));
                     }
                 else  if(NextConfigurationItem->DataType == DATA_TYPE_INT_32)
                     {
                         *((int32_t *)NextConfigurationItem->Value) = (int32_t)MyValueHolder.int32_t_Value;
 
-                        if(PostToTerminal == TRUE)
-                            TERMINAL_PRINTF("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int32_t *)NextConfigurationItem->Value));
+                        RT_CONFIG_DEBUG("%s loaded with value of %i\r\n",NextConfigurationItem->Name, *((int32_t *)NextConfigurationItem->Value));
                     }
 
                 break;
@@ -693,8 +442,7 @@ void Configuration_LoadWithValue(ConfigurationItem *NextConfigurationItem,void *
                 //We will also look at the current data type to get the casting correct
                 *((float *)NextConfigurationItem->Value) = (float)MyValueHolder.float_Value;
 
-                if(PostToTerminal == TRUE)
-                    TERMINAL_PRINTF("%s loaded with value of %f\r\n",NextConfigurationItem->Name, *((float *)NextConfigurationItem->Value));
+                RT_CONFIG_DEBUG("%s loaded with value of %f\r\n",NextConfigurationItem->Name, *((float *)NextConfigurationItem->Value));
 
                 break;
         }

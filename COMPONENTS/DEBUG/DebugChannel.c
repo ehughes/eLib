@@ -1,7 +1,18 @@
 #include "DebugChannel.h"
 
 
-uint32_t DebugChannelFlag = 0xFFFFFFFFFF;
+uint32_t DebugChannelFlag = (1<<DEBUG_CHANNEL_SYSTEM   );
+/*
+uint32_t DebugChannelFlag = (1<<DEBUG_CHANNEL_SYSTEM   ) |
+                            (1<<DEBUG_CHANNEL_CELL     ) |
+                            (1<<DEBUG_CHANNEL_MQTT     ) |
+                            (1<<DEBUG_CHANNEL_MQTT_NET ) |
+                            (1<<DEBUG_CHANNEL_BRIDGE   ) |
+                            (1<<DEBUG_CHANNEL_DNS      ) |
+                            (1<<DEBUG_CHANNEL_NTP      ) |
+                            (1<<DEBUG_CHANNEL_CLOUD    );
+*/
+
 
 
 const char *DebugChannelNames[32] = { "SYSTEM",//0 
@@ -9,12 +20,13 @@ const char *DebugChannelNames[32] = { "SYSTEM",//0
                                     "4CH",     //2
                                     "SNS",     //3
                                     "CELL",     //4
-                                    "MQTT",    //5
-                                    "MQTT_NET",//6
-                                    "BRIDGE",  //7
-                                    "DNS", //8
-                                    "NTP", //9
-                                    (char *)0, //10
+                                    "CELL_STAT",//5
+                                    "MQTT",    //6
+                                    "MQTT_NET",//7
+                                    "BRIDGE",  //8
+                                    "DNS", //9
+                                    "NTP", //10
+                                    "CLOUD", //11
                                     (char *)0, //11
                                     (char *)0, //12
                                     (char *)0, //13
@@ -49,8 +61,8 @@ const char *DebugChannelColors[32] = {
                                      DEBUG_GREEN,  //7
                                      DEBUG_YELLOW, //8
                                      DEBUG_RED, //9
-                                     (char *)0, //10
-                                     (char *)0, //11
+                                     DEBUG_CYAN,     //10
+                                     DEBUG_CYAN,     //11
                                      (char *)0, //12
                                      (char *)0, //13
                                      (char *)0, //14

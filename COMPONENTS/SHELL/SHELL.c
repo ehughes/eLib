@@ -7,40 +7,72 @@
 #include "SHELL_Commands__Cell.h"
 #include "SHELL_Commands__Bridge.h"
 
+
+#include "SHELL_Commands__Cloud.h"
+
 #include "System.h"
 #include "Board.h"
-#include "nrf_mesh_defines.h"
-#include "SEGGER_RTT.h"
+#include "Components/RTT/SEGGER_RTT.h"
 #include "system_nrf52840.h"
 #include "Drivers/SC16IS741A/SC16IS741A.h"
 
-#define SHELL_SERIAL_QUEUE_SIZE 2048
+#define SHELL_SERIAL_TX_QUEUE_SIZE (2048)
+#define SHELL_SERIAL_RX_QUEUE_SIZE (2048)
+
+#define CLOUD_SHELL_TX_QUEUE_SIZE (1500)
+#define CLOUD_SHELL_RX_QUEUE_SIZE (1024)
+
 
 shell_context_struct MySerialShell;
-
+shell_context_struct MyCloudShell;
 
 ByteQueue ShellInputQueue;
 ByteQueue ShellOutputQueue;
 
-uint8_t ShellInputQueueStorage[SHELL_SERIAL_QUEUE_SIZE];
-uint8_t ShellOutputQueueStorage[SHELL_SERIAL_QUEUE_SIZE];
+uint8_t ShellInputQueueStorage[SHELL_SERIAL_RX_QUEUE_SIZE];
+uint8_t ShellOutputQueueStorage[SHELL_SERIAL_TX_QUEUE_SIZE];
 
 ByteQueue Shell_Uart_OutputQueue;
-uint8_t Shell_Uart_OutputQueueStorage[SHELL_SERIAL_QUEUE_SIZE];
+uint8_t Shell_Uart_OutputQueueStorage[SHELL_SERIAL_TX_QUEUE_SIZE];
 
 uint32_t ShellHasBeenInitialized = 0;
 
-uint8_t ShellTempOutputBuffer[SHELL_SERIAL_QUEUE_SIZE];
+uint8_t ShellTempOutputBuffer[SHELL_SERIAL_TX_QUEUE_SIZE];
+
+uint8_t CloudShellInputQueueStorage[CLOUD_SHELL_TX_QUEUE_SIZE];
+uint8_t CloudShellOutputQueueStorage[CLOUD_SHELL_RX_QUEUE_SIZE];
+
+ByteQueue CloudShellInputQueue;
+ByteQueue CloudShellOutputQueue;
+
+
+/*
+There is a linker setting in SES to route __putchar to this symbol so we can get printf's out 
+*/
+
+int my_putchar(int ch)
+{
+  if(ch == '\n')
+  {
+      ByteEnqueue(&ShellOutputQueue,'\r');
+      ByteEnqueue(&ShellOutputQueue,'\n');
+  }
+  else
+  {
+      ByteEnqueue(&ShellOutputQueue,ch);
+  }
+  
+  return EOF;
+ }
 
 
 void Init_Shell()
 {
-
         Init_Shell_IO();
 
-        InitByteQueue(&ShellInputQueue, SHELL_SERIAL_QUEUE_SIZE, ShellInputQueueStorage);
-        InitByteQueue(&ShellOutputQueue, SHELL_SERIAL_QUEUE_SIZE, ShellOutputQueueStorage);
-        InitByteQueue(&Shell_Uart_OutputQueue, SHELL_SERIAL_QUEUE_SIZE, Shell_Uart_OutputQueueStorage);
+        InitByteQueue(&ShellInputQueue, SHELL_SERIAL_RX_QUEUE_SIZE, ShellInputQueueStorage);
+        InitByteQueue(&ShellOutputQueue, SHELL_SERIAL_TX_QUEUE_SIZE, ShellOutputQueueStorage);
+        InitByteQueue(&Shell_Uart_OutputQueue, SHELL_SERIAL_TX_QUEUE_SIZE, Shell_Uart_OutputQueueStorage);
 
         MySerialShell.ShellInQueue = &ShellInputQueue;
         MySerialShell.ShellOutQueue = &ShellOutputQueue;
@@ -51,66 +83,161 @@ void Init_Shell()
         MySerialShell.CurrentPrivilegeLevel = 0;
 
 
+        InitByteQueue(&CloudShellInputQueue, CLOUD_SHELL_RX_QUEUE_SIZE, CloudShellInputQueueStorage);
+        InitByteQueue(&CloudShellOutputQueue, CLOUD_SHELL_TX_QUEUE_SIZE, CloudShellOutputQueueStorage);
+
+     
+        MyCloudShell.ShellInQueue = &CloudShellInputQueue;
+        MyCloudShell.ShellOutQueue = &CloudShellOutputQueue;
+
+        MyCloudShell.echo = 0;
+        MyCloudShell.Description = "Remote Cloud Shell";
+        MyCloudShell.prompt ="";
+        MyCloudShell.CurrentPrivilegeLevel = 0;
+        MyCloudShell.QuietOnBadCommand = 1;
+
+       
+        SHELL_RegisterCommand(&MyCloudShell,
+                               "beep", 
+                               "Mario Beep",    
+                               (cmd_function_t)CloudBeep,
+                               0
+                               ); 
+
+
+        SHELL_RegisterCommand(&MyCloudShell,
+                                "br", 
+                                 "retrieves the birth record",    
+                                (cmd_function_t)(br),
+                                0
+                                );
+
+
+        SHELL_RegisterCommand(&MyCloudShell,
+                               "cell", 
+                               "gets cell modem info",    
+                               (cmd_function_t)(cell),
+                               0
+                               );
+
+         SHELL_RegisterCommand(&MyCloudShell,
+                               "probe", 
+                               "gets the birth records of the probes",    
+                               (cmd_function_t)(probe),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MyCloudShell,
+                               "reboot", 
+                               "system reboot",    
+                               (cmd_function_t)(reset),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MyCloudShell,
+                               "pp", 
+                               "probe power",    
+                               (cmd_function_t)(pp),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MyCloudShell,
+                               "mget", 
+                               "",    
+                               (cmd_function_t)(mget),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MyCloudShell,
+                               "mset", 
+                               "probe power",    
+                               (cmd_function_t)(mset),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MyCloudShell,
+                               "msave", 
+                               "probe power",    
+                               (cmd_function_t)(msave),
+                               0
+                               );
+
 
         SHELL_RegisterCommand(&MySerialShell,
-                                                                  "help", 
-                                                                  "List all available Commands",    
-                                                                  (cmd_function_t)HelpCommand ,
-                                                                  0
-                                                                  );
+                              "help", 
+                              "List all available Commands",    
+                              (cmd_function_t)HelpCommand ,
+                              0
+                              );
 
         SHELL_RegisterCommand(&MySerialShell,
-                                                                  "cow", 
-                                                                  "it moos",    
-                                                                  (cmd_function_t)(cow) 
-                                                                  ,0
-                                                                  );
-
-
-        SHELL_RegisterCommand(&MySerialShell,
-                                                  "i", 
-                                                  "Enter interactive mode",    
-                                                  (cmd_function_t)(i) 
-                                                  ,0
-                                                  );
-
-        SHELL_RegisterCommand(&MySerialShell,
-                                                  "q", 
-                                                  "Enter quiet mode",    
-                                                  (cmd_function_t)(q) 
-                                                  ,0
-                                                  );
-
-        SHELL_RegisterCommand(&MySerialShell,
-                                                  "reboot", 
-                                                  "software reset",    
-                                                  (cmd_function_t)(reset),
-                                                  0
-                                                  );
-
-        SHELL_RegisterCommand(&MySerialShell,
-                                                  "debug", 
-                                                  "sets the current debug message level",    
-                                                  (cmd_function_t)(debug),
-                                                  0
-                                                  );
+                              "cow", 
+                              "it moos",    
+                              (cmd_function_t)(cow) 
+                              ,0
+                              );
 
 
         SHELL_RegisterCommand(&MySerialShell,
-                                                  "wipe", 
-                                                  "Resets the mesh node",    
-                                                  (cmd_function_t)(wipe), 
-                                                  0
-                                                  );
+                              "i", 
+                              "Enter interactive mode",    
+                              (cmd_function_t)(i) 
+                              ,0
+                              );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "q", 
+                              "Enter quiet mode",    
+                              (cmd_function_t)(q) 
+                              ,0
+                              );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                               "reboot", 
+                               "software reset",    
+                               (cmd_function_t)(reset),
+                               0
+                               );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "debug", 
+                              "sets the current debug message level",    
+                              (cmd_function_t)(debug),
+                              0
+                              );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "br", 
+                              "retrieves the birth record",    
+                              (cmd_function_t)(br),
+                              0
+                              );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "rt", 
+                              "forces a resync of internal time",    
+                              (cmd_function_t)(rt),
+                              0
+                              );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "beep", 
+                              "mario 11",    
+                              (cmd_function_t)(CloudBeep),
+                              0
+                              );
+
+
+        SHELL_RegisterCommand(&MySerialShell,
+                              "shell_test", 
+                              "Use this to show the parsed arguments.",    
+                              (cmd_function_t)(shell_test)
+                                    ,0                                                                
+                              );
+
+
 
 #ifdef eli
-        SHELL_RegisterCommand(&MySerialShell,
-                                                                  "shell_test", 
-                                                                  "Use this to show the parsed arguments.",    
-                                                                  (cmd_function_t)(shell_test)
-                                                                        ,0                                                                
-                                                                  );
-
 
         SHELL_RegisterCommand(&MySerialShell,
                                                                   "flash_info", 
@@ -218,8 +345,16 @@ void Init_Shell()
                                                   "gets a parameter",
                                                   (cmd_function_t)(get),
                                                   0
+                                                  );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                                                  "mget",
+                                                  "mini get.   Returns only 1 parameter at a time without min&max",
+                                                  (cmd_function_t)(mget),
+                                                  0
                                                   
                                                   );
+
 
         SHELL_RegisterCommand(&MySerialShell,
                                                   "set",
@@ -227,6 +362,13 @@ void Init_Shell()
                                                   (cmd_function_t)(set),
                                                   0
                                                   
+                                                  );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                                                  "mset",
+                                                  "mini set.   returns parameter change in mini get format",
+                                                  (cmd_function_t)(mset),
+                                                  0
                                                   );
 
         SHELL_RegisterCommand(&MySerialShell,
@@ -238,49 +380,19 @@ void Init_Shell()
                                                   );
 
         SHELL_RegisterCommand(&MySerialShell,
-                                                  "load",
-                                                  "forces a load of configuration parameters from configuration file",
-                                                  (cmd_function_t)(load_config),
+                                                  "msave",
+                                                  "saves the current configuration parameters without returning get",
+                                                  (cmd_function_t)(msave),
                                                   0
                                                   
                                                   );
 
         SHELL_RegisterCommand(&MySerialShell,
-                                                  "mstat",
-                                                  "Gets the current mesh status",
-                                                  (cmd_function_t)(mstat),
+                                                  "load",
+                                                  "forces a load of configuration parameters from configuration file",
+                                                  (cmd_function_t)(load_config),
                                                   0
-                                                  );
-
-
-         SHELL_RegisterCommand(&MySerialShell,
-                                                  "relay",
-                                                  "Temporarily enables or disables the relay feature",
-                                                  (cmd_function_t)(relay),
-                                                  0
-                                                  );
-
-         SHELL_RegisterCommand(&MySerialShell,
-                                                  "rstat",
-                                                  "Gets relay statistics",
-                                                  (cmd_function_t)(rstat),
-                                                  0
-                                                  );
-
-         SHELL_RegisterCommand(&MySerialShell,
-                                                  "at",
-                                                  "sends an AT command to the cell modem",
-                                                  (cmd_function_t)(cell_at),
-                                                  0
-                                                  );
-
-         SHELL_RegisterCommand(&MySerialShell,
-                                                  "AT",
-                                                  "sends an AT command to the cell modem",
-                                                  (cmd_function_t)(cell_at),
-                                                  0
-                                                  );
-
+                            );
 
           SHELL_RegisterCommand(&MySerialShell,
                                                   "txt",
@@ -304,34 +416,40 @@ void Init_Shell()
                                                   );
 
       
-
-
-
-      #ifdef eli
-
-        SHELL_RegisterCommand(&MySerialShell,
-                                                  "fopen", 
-                                                  "opens a file",    
-                                                                                                                
-                                                  (cmd_function_t)(Remote_fopen),
-                                                  0
+          SHELL_RegisterCommand(&MySerialShell,
+                                                  "epoch",
+                                                  "Gets current Epoch time",
+                                                  (cmd_function_t)(epoch),
+                                                   0
                                                   );
 
+      
+        
+
         SHELL_RegisterCommand(&MySerialShell,
-                                                  "fclose", 
-                                                  "closes the open file",    
+                                                  "fcreate", 
+                                                  "creates a file open file",    
                                                                                                                 
-                                                  (cmd_function_t)(Remote_fclose),
+                                                  (cmd_function_t)(Remote_fcreate),
                                                   0
                                                   );
 
         SHELL_RegisterCommand(&MySerialShell,
                                                   "fwrite", 
-                                                  "write a line of text to a file",    
+                                                  "writes binary data to a file",    
                                                                                                                 
                                                   (cmd_function_t)(Remote_fwrite),
                                                   0
                                                   );
+
+        SHELL_RegisterCommand(&MySerialShell,
+                                                  "fwriteb64", 
+                                                  "writes binary data to a file",    
+                                                                                                                
+                                                  (cmd_function_t)(Remote_fwriteb64),
+                                                  0
+                                                  );
+
 
         SHELL_RegisterCommand(&MySerialShell,
                                                   "fwriteline", 
@@ -349,17 +467,39 @@ void Init_Shell()
                                                   ,0
                                                   );
 
+
+      SHELL_RegisterCommand(&MySerialShell,
+                               "probe", 
+                               "gets the birth records of the probes",    
+                               (cmd_function_t)(probe),
+                               0
+                               );
+
+      SHELL_RegisterCommand(&MySerialShell,
+                               "pp", 
+                               "cycles power on a channel",    
+                               (cmd_function_t)(pp),
+                               0
+                               );
+
+          SHELL_RegisterCommand(&MySerialShell,
+                               "at", 
+                               "manual AT command to modem",    
+                               (cmd_function_t)(cell_at),
+                               0
+                               );
+
+/*
         SHELL_RegisterCommand(&MySerialShell,
                                                   "validate", 
                                                   "validate a boot image",    
                                                                                                                 
                                                   (cmd_function_t)(validate_boot_file) 
                                                   );
+*/
 
+                                                  //);
 
-                                                  );
-
-#endif
 
     SHELL_printf(&MySerialShell,"\r\n");
     SHELL_printf(&MySerialShell,MySerialShell.prompt);
@@ -529,6 +669,11 @@ void Shell_MoveQueues()
 
 
             ByteEnqueue(&SPI_UART_TX_Q,DataOut);
+
+            if(FourChannel__IsEscaped())
+            {
+                 ByteEnqueue(&RS485_OutputQueue,DataOut);
+            }
 
         }
 

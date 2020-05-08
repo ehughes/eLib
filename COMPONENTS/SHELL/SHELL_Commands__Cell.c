@@ -51,12 +51,24 @@ cmd_function_t cell_txt(p_shell_context_t Shell,int32_t argc, char **argv)
 cmd_function_t cell(p_shell_context_t Shell,int32_t argc, char **argv)
 {
     
-     SHELL_printf(Shell,"State : [0x%02x] %s\r\n",Cell_GetConnectionState(),Cell_GetConnectionStateString(Cell_GetConnectionState()));
-     SHELL_printf(Shell,"RSSI : -%ddbm\r\n",Cell_GetRSSI());
-     SHELL_printf(Shell,"IMEI : %s\r\n",Cell_GetIMEI());
-     SHELL_printf(Shell,"ICCID : %s\r\n",Cell_GetICCID());
-     SHELL_printf(Shell,"Operator : %s\r\n",Cell_GetOperator());
+
+ #define BQ Shell->ShellOutQueue 
+        
+    Q_JSON_Start(BQ);
+
+    Q_JSON_Tab(BQ); Q_JSON_OutputStringVariable(BQ,"ObjID","Cell");Q_JSON_NextLine(BQ);
+    
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"State\":\"[0x%02x] %s\"",Cell_GetConnectionState(),Cell_GetConnectionStateString(Cell_GetConnectionState()));Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"RSSI\":\"-%ddbm\"",Cell_GetRSSI());Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"IMEI\":\"%s\"",Cell_GetIMEI());Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"ICCID\":\"%s\"",Cell_GetICCID());Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"Operator\":\"%s\"",Cell_GetOperator());Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); SHELL_printf(Shell,"\"Firmware\":\"%x\"",CellFirmwareVersion);
+
+    Q_JSON_Stop(BQ);
 
     return 0;
+
+#undef BQ
      
 }

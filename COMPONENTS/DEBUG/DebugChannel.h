@@ -18,18 +18,19 @@ extern uint32_t DebugChannelFlag;
 extern const char *DebugChannelNames[32];
 extern const char *DebugChannelColors[32];
 
-
-
 #define DEBUG_CHANNEL_SYSTEM    0
 #define DEBUG_CHANNEL_MESH      1
 #define DEBUG_CHANNEL_4CH       2
 #define DEBUG_CHANNEL_SNS       3
 #define DEBUG_CHANNEL_CELL      4
-#define DEBUG_CHANNEL_MQTT      5
-#define DEBUG_CHANNEL_MQTT_NET  6
-#define DEBUG_CHANNEL_BRIDGE    7
-#define DEBUG_CHANNEL_DNS       8
-#define DEBUG_CHANNEL_NTP       9
+#define DEBUG_CHANNEL_CELL_STAT 5
+#define DEBUG_CHANNEL_MQTT      6
+#define DEBUG_CHANNEL_MQTT_NET  7
+#define DEBUG_CHANNEL_BRIDGE    8
+#define DEBUG_CHANNEL_DNS       9
+#define DEBUG_CHANNEL_NTP       10
+#define DEBUG_CHANNEL_CLOUD     11
+
 
 
 
@@ -40,7 +41,7 @@ extern const char *DebugChannelColors[32];
                                                        SHELL_printf(&MySerialShell,__VA_ARGS__);\
                                                    }
 
-#define DEBUG_NO_MARKER(DebugChannel,...)           if(DebugChannelFlag&&(1<<DebugChannel))\
+#define DEBUG_NO_MARKER(DebugChannel,...)           if(DebugChannelFlag&(1<<DebugChannel))\
                                                     {\
                                                       SHELL_printf(&MySerialShell,__VA_ARGS__);\
                                                     }

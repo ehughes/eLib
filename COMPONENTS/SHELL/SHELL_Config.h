@@ -19,7 +19,7 @@
  *         using SHELL_printf needs enough extra stack space to cover this
  */
 #ifndef     SHELL_PRINTF_MAX_LEN
-#define   SHELL_PRINTF_MAX_LEN      (256U)
+#define   SHELL_PRINTF_MAX_LEN      (1024U)
 #endif
 
 /*! @brief This macro sets the time the shell will waiting when checking mutexes and enqueuing data
@@ -55,7 +55,7 @@
 
 /*! @brief Macro to set console buffer size. */
 #ifndef SHELL_BUFFER_SIZE
-#define SHELL_BUFFER_SIZE (256U)
+#define SHELL_BUFFER_SIZE (512)
 #endif
 
 /*! @brief Macro to set maximum arguments in command. */

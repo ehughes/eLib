@@ -372,10 +372,15 @@ static void ProcessCommand(p_shell_context_t ThisShellContext, const char *cmd)
 
     if(flag == 0)
     {
-        SHELL_printf(ThisShellContext,
-                "\r\n\"%s\" Command not recognized.  Enter 'help' to view a list of available commands.\r\n\r\n",cmd);
-            tmpCommand = NULL;
-     }
+        if(ThisShellContext->QuietOnBadCommand==0)
+        {
+            SHELL_printf(ThisShellContext,
+                    "\r\n\"%s\" Command not recognized.  Enter 'help' to view a list of available commands.\r\n\r\n",cmd);
+               
+        }
+
+         tmpCommand = NULL;
+    }
 
     if(tmpCommand != NULL)
     {
@@ -405,11 +410,13 @@ static void ProcessCommand(p_shell_context_t ThisShellContext, const char *cmd)
         else
         {
 
-                if(ThisShellContext->CurrentPrivilegeLevel >= tmpCommand->MinPrivilegeLevel)
+           if(ThisShellContext->CurrentPrivilegeLevel >= tmpCommand->MinPrivilegeLevel)
                 tmpCommand->pFuncCallBack((void *)ThisShellContext, argc, argv);
             else
-                        SHELL_printf(ThisShellContext,"\r\nYou do not have privilege to run %s\r\n\r\n",tmpCommand->pcCommand);
-
+            {
+                if(ThisShellContext->QuietOnBadCommand==0)
+                    SHELL_printf(ThisShellContext,"\r\nYou do not have privilege to run %s\r\n\r\n",tmpCommand->pcCommand);
+            }
             
         }
 
@@ -635,7 +642,7 @@ cmd_function_t HelpCommand(p_shell_context_t ThisShellContext, int32_t argc, cha
 
     for (i = 0; i < ThisShellContext->ShellCommands.numberOfCommandInList; i++)
     {
-        Delay_mS(10);
+        System__Delay_mS(10);
         SHELL_printf(ThisShellContext,VT100_YELLOW);
 
         

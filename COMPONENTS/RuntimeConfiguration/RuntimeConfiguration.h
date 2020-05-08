@@ -9,67 +9,11 @@
 #include "Components/FILE_SYSTEM/ff.h"
 
 
-
 #ifndef RUNTIMECONFIG_H_
 #define RUNTIMECONFIG_H_
 
 #define CONFIG_MAX_VALUE_STRING_LENGTH   192
-
-extern uint32_t ConfigFile_EnableRelay;
-
-
-extern uint32_t ConfigFile_EnableRelay;
-extern char ConfigFile_Subnet[CONFIG_MAX_VALUE_STRING_LENGTH];
-extern char ConfigFile_Application[CONFIG_MAX_VALUE_STRING_LENGTH];
-
-
-extern uint16_t ConfigFile_UnicastAddrBase4Ch;;
-
-extern uint16_t ConfigFile_SensorPubAddr;
-
-extern uint16_t ConfigFile_SubAddr;
-
-extern uint8_t  ConfigFile_EnableBeep;
-
-#if USE_BRIDGE == 1
-     
-     extern uint32_t ConfigFile_CustomerID;
-     extern uint32_t ConfigFile_BridgeID;
-
-     extern char ConfigFile_AzureHost[CONFIG_MAX_VALUE_STRING_LENGTH];
-     extern char ConfigFile_AzureKey[CONFIG_MAX_VALUE_STRING_LENGTH];
-     extern char ConfigFile_AzureDeviceID[CONFIG_MAX_VALUE_STRING_LENGTH];
-   
-    
-     extern char ConfigFile_TimeServer0[64];
-     extern char ConfigFile_TimeServer1[64];
-     extern char ConfigFile_TimeServer2[64];
-     extern char ConfigFile_TimeServer3[64];
-
-     extern uint32_t ConfigFile_JackID[4];
-
-#endif
-
-typedef struct
-{
-        uint32_t EEPROM_MagicKey;
-        char SN[32];
-        char DoB[32];
-        char HW_ID[32];
-
-}__attribute__((packed)) EEPROM_Settings;
-
-#define EEPROM_INVALID  -1
-#define EEPROM_OK       0
-
-#define EEPROM_MAGIC_KEY 0xBA5EBA11
-
-int32_t EEPROM_Load();
-int32_t EEPROM_Save();
-
-extern EEPROM_Settings MyEEPROM_Settings;
-
-extern uint32_t ConfigFile_EnableRelay;
+#define CONFIG_MAX_LIST_LENGTH           256
 
 #define MAX_SECTIONS             8
 
@@ -84,6 +28,8 @@ extern uint32_t ConfigFile_EnableRelay;
 #define DATA_TYPE_TIME           8
 
 
+
+
 typedef struct
 {
     char *Name;
@@ -96,25 +42,19 @@ typedef struct
     char *iniSection;  //Which section of the init file.
 } ConfigurationItem;
 
-
-extern const ConfigurationItem  MyConfigurationItems[];
-
-
 #define CONFIG_SAVE_OK  0
 #define CONFIG_LOAD_OK  0
 #define CONFIGURATION_ITEM_NOT_FOUND    -1
 
 void    Configuration_LoadDefaults();
 
-int32_t Configuration_Export(char *FileName);
-int32_t  Configuration_Load(char * FileName);
-int32_t Configuration_GetIndex(char * Name);
-uint32_t Configuration_GetNumItems();
-char * Configuration_GetValueString(char * Name);
-int32_t Configuration_SetByName(char * Name,void * Value);
+int32_t Configuration_Export(ConfigurationItem *ConfigList,char *FileName);
+int32_t  Configuration_Load(ConfigurationItem *ConfigList, char * FileName);
+int32_t Configuration_GetIndex(ConfigurationItem *ConfigList, char * Name);
+int32_t Configuration_GetCount(ConfigurationItem *ConfigList);
+char * Configuration_GetValueString(ConfigurationItem *ConfigList,char * Name);
+int32_t Configuration_SetByName(ConfigurationItem *ConfigList,char * Name,void * Value);
 
-void Import_EEPROM_Settings();
-void Export_EEPROM_Settings();
 
 #endif /* RUNTIMECONFIG_H_ */
 

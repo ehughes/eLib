@@ -63,8 +63,20 @@ cmd_function_t shell_test(p_shell_context_t Shell,int32_t argc, char **argv)
 
 cmd_function_t reset(p_shell_context_t Shell,int32_t argc, char **argv)
 {
-                NVIC_SystemReset();
-                return 0;
+
+    #define BQ Shell->ShellOutQueue 
+        
+    Q_JSON_Start(BQ);
+
+    Q_JSON_Tab(BQ); Q_JSON_OutputStringVariable(BQ,"Result","OK"); Q_JSON_NextLine(BQ);
+    Q_JSON_Tab(BQ); Q_JSON_OutputStringVariable(BQ,"Message","Rebooting in 5 Seconds");
+
+    Q_JSON_Stop(BQ);
+
+    #undef BQ
+
+     System__FlagReboot();
+     return 0;
 }
 
 
@@ -160,7 +172,7 @@ cmd_function_t debug(p_shell_context_t Shell, int32_t argc, char **argv)
                else if (strcmp(argv[1],"all") == 0)
                {
                    DebugChannelFlag = 0xFFFFFFFF;
-                   SHELL_printf(Shell,"\r\nEnabling all debug channels.\r\\r\nn");
+                   SHELL_printf(Shell,"Enabling all debug channels.\r\n");
                }
                else if (strcmp(argv[1],"none") == 0)
                {

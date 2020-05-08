@@ -3,7 +3,7 @@
 
 
 #include "SHELL_Config.h"
-#include "Components/Queue/eQueue.h"
+#include "Components/DATA_STRUCT/QUEUE/eQueue.h"
 
 
 #define VT100_RED     "\033[31;40m"
@@ -64,7 +64,9 @@ typedef struct _shell_context_struct
     uint8_t l_pos;                /*!< Total line position */
     uint8_t c_pos;                /*!< Current line position */
     uint8_t echo;                                 /*Determines if characters are echoed*/
+    uint8_t QuietOnBadCommand;                                 /*Determines if characters are echoed*/
     
+
     ByteQueue * ShellInQueue;   /*!<This input queue is checked from shell input*/
     ByteQueue * ShellOutQueue; /*!<This output queue is what the shell writes to*/
 
@@ -102,7 +104,7 @@ cmd_function_t HelpCommand(p_shell_context_t ThisShellContext, int32_t argc, cha
 
 
 extern shell_context_struct MySerialShell;
-
+extern shell_context_struct MyCloudShell;
 
 /*******************************************************************************
  * API

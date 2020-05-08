@@ -1,6 +1,9 @@
 #include "System.h"
 #include "Shell.h"
 #include "SHELL_Commands__FileSystem.h"
+#include "Components/eMD5/emd5.h"
+
+
 
 /*
 cmd_function_t flash_info(p_shell_context_t Shell,int32_t argc, char **argv)
@@ -9,18 +12,21 @@ cmd_function_t flash_info(p_shell_context_t Shell,int32_t argc, char **argv)
 
     ID = SPIFI_GetJEDEC_ID();
 
-    StartJSON(Shell);
-    OutputTab(Shell); OutputObjID(Shell,"FlashInfo"); OutputNewJSON_Line(Shell);
-    OutputTab(Shell); SHELL_printf(Shell,"\"Manufacturer ID\" : \"0x%02x\"",ID&0XFF);    OutputNewJSON_Line(Shell);
-    OutputTab(Shell); SHELL_printf(Shell,"\"Memory Type\" : \"0x%02x\"",(ID>>8)&0XFF);     OutputNewJSON_Line(Shell);
-    OutputTab(Shell); SHELL_printf(Shell,"\"Capacity Code\" : \"0x%02x\"",(ID>>16)&0XFF);  OutputNewJSON_Line(Shell);
-    OutputTab(Shell); SHELL_printf(Shell,"\"Status Register\" : \"0x%02x\"",SPIFI_RDSR()&0XFF);  OutputNewLine(Shell);
+    Q_JSON_Start(BQ);
+    Q_JSON_OutputTab(BQ); OutputObjID(Shell,"FlashInfo"); Q_JSON_NextLine(BQ);
+    Q_JSON_OutputTab(BQ); SHELL_printf(Shell,"\"Manufacturer ID\" : \"0x%02x\"",ID&0XFF);    Q_JSON_NextLine(BQ);
+    Q_JSON_OutputTab(BQ); SHELL_printf(Shell,"\"Memory Type\" : \"0x%02x\"",(ID>>8)&0XFF);     Q_JSON_NextLine(BQ);
+    Q_JSON_OutputTab(BQ); SHELL_printf(Shell,"\"Capacity Code\" : \"0x%02x\"",(ID>>16)&0XFF);  Q_JSON_NextLine(BQ);
+    Q_JSON_OutputTab(BQ); SHELL_printf(Shell,"\"Status Register\" : \"0x%02x\"",SPIFI_RDSR()&0XFF);  Q_JSON_NextLine(BQ);
 
-    StopJSON(Shell);
+    Q_JSON_Stop(BQ);
 
     return 0;
 }
 */
+
+
+
 
 cmd_function_t touch(p_shell_context_t Shell,int32_t argc, char **argv)
 {
@@ -91,7 +97,7 @@ cmd_function_t more(p_shell_context_t Shell,int32_t argc, char **argv)
                     
                   f_read(&MyFile,&ReadBuffer[0],sizeof(ReadBuffer),&BW);
                   SHELL_SendBuffer(Shell,(uint8_t *)ReadBuffer,BW);
-                  Delay_mS(10);
+                  System__Delay_mS(10);
               }
 
               FR = f_close(&MyFile);
@@ -341,7 +347,7 @@ cmd_function_t test_flash(p_shell_context_t Shell,int32_t argc, char **argv)
     for(CurrentSector=0; CurrentSector<SPIFI_ATTACHED_FLASH_SIZE_IN_SECTORS; CurrentSector++)
     {
 
-              Shell_MoveQueues();
+        Shell_MoveQueues();
 
         SHELL_printf(Shell,"Checking Sector %d/%d\r\n",CurrentSector+1,SPIFI_ATTACHED_FLASH_SIZE_IN_SECTORS);
         for(int z=0;z<sizeof(Data);z++){Data[z] = (CurrentSector)&0xFF;}
@@ -366,6 +372,8 @@ cmd_function_t test_flash(p_shell_context_t Shell,int32_t argc, char **argv)
         {
             break;
         }
+
+        System__Delay_mS(10);
     }
 
     if(CurrentSector != SPIFI_ATTACHED_FLASH_SIZE_IN_SECTORS)
@@ -590,6 +598,10 @@ void HexStringToArray(char *HexString,uint8_t *Data,uint32_t DigitsToProcess)
 }
 
 
+
+
+
+
 cmd_function_t file_rename(p_shell_context_t Shell,int32_t argc, char **argv)
 {
     FRESULT FR;
@@ -616,7 +628,317 @@ cmd_function_t file_rename(p_shell_context_t Shell,int32_t argc, char **argv)
 
 
 
+void Output_JSON_Obj_FileResult(p_shell_context_t Shell,char * Operation,char * Result)
+{
+
+        #define BQ Shell->ShellOutQueue 
+
+        Q_JSON_Start(BQ);
+        Q_JSON_OutputTab(BQ); Q_JSON_OutputStringVariable(BQ,"ObjID",Operation); Q_JSON_NextLine(BQ);
+        Q_JSON_OutputTab(BQ); Q_JSON_OutputStringVariable(BQ,"Result", Result); 
+        Q_JSON_Stop(BQ);
+
+        #undef BQ
+}
 
 
 
 
+
+#define REMOTE_FILE_IS_OPEN   1
+#define REMOTE_FILE_IS_CLOSED 0
+
+uint32_t RemoteFileState = REMOTE_FILE_IS_CLOSED;
+FIL RemoteFile;
+
+
+
+cmd_function_t Remote_fcreate(p_shell_context_t Shell,int32_t argc, char **argv)
+{
+        FRESULT FR;
+
+        if(argc != 2)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fcreate","No File Name Specified");
+                return (cmd_function_t)-1;
+        }
+       
+        FR = f_open(&RemoteFile, argv[1], FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+
+        if(FR!= FR_OK)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fcreate",FRESULT_String[FR]);
+                return (cmd_function_t)FR;
+        }
+        else
+        {
+                FR = f_close(&RemoteFile);
+
+                Output_JSON_Obj_FileResult(Shell,"fcreate",FRESULT_String[FR]);
+        }
+
+        return FR_OK;
+}
+
+
+cmd_function_t Remote_fwrite(p_shell_context_t Shell,int32_t argc, char **argv)
+{
+        FRESULT FR;
+
+   #define MAX_BIN_DATA_SIZE 64
+
+        uint8_t DataToWrite[MAX_BIN_DATA_SIZE];
+
+        if(argc < 3 )
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwrite","fwrite needs an argument");
+                return (cmd_function_t)-1;
+        }
+ 
+        FR = f_open(&RemoteFile, argv[1], FA_WRITE | FA_OPEN_APPEND);
+
+        if(FR!= FR_OK)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwrite",FRESULT_String[FR]);
+                return (cmd_function_t)FR;
+        }
+
+
+        if(strlen(argv[2])&0x1)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwrite","argument should be an even number of hex digits");
+                f_close(&RemoteFile);
+                return 0;
+        }
+
+        uint32_t Len = strlen(argv[2]);
+
+        if(Len>MAX_BIN_DATA_SIZE*2)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwrite","A maximum of 128 hex digits (64 bytes) allowed");
+                  f_close(&RemoteFile);
+                return 0;
+        }
+
+        HexStringToArray(argv[2],DataToWrite,Len);
+
+        uint32_t BW;
+
+
+         FR = f_write (
+         &RemoteFile,
+         DataToWrite,
+         Len/2,
+         (UINT *)&BW
+         );
+
+           if(FR!= FR_OK)
+           {
+                Output_JSON_Obj_FileResult(Shell,"fwrite",FRESULT_String[FR]);
+                f_close(&RemoteFile);
+                return (cmd_function_t)FR;
+           }
+
+        Output_JSON_Obj_FileResult(Shell,"fwrite",FRESULT_String[FR]);
+
+        f_close(&RemoteFile);
+
+        return 0;
+}
+
+
+
+cmd_function_t Remote_fwriteb64(p_shell_context_t Shell,int32_t argc, char **argv)
+{
+        FRESULT FR;
+
+        #define MAX_BIN_DATA_SIZE 128
+
+        uint8_t DataToWrite[MAX_BIN_DATA_SIZE];
+        uint32_t WriteLen = MAX_BIN_DATA_SIZE;
+
+        if(argc < 3 )
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwriteb64","fwrite needs an argument");
+                return (cmd_function_t)-1;
+        }
+ 
+        FR = f_open(&RemoteFile, argv[1], FA_WRITE | FA_OPEN_APPEND);
+
+        if(FR!= FR_OK)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwriteb64",FRESULT_String[FR]);
+                 f_close(&RemoteFile);
+                return (cmd_function_t)FR;
+        }
+
+
+       if       (
+                 Base64_Decode(argv[2],strlen(argv[2]),
+                                  DataToWrite,
+                                  &WriteLen)
+                )
+                {
+                    Output_JSON_Obj_FileResult(Shell,"fwriteb64","base64 input error");
+                    f_close(&RemoteFile);
+                     return (cmd_function_t)FR;
+                    
+               }
+
+        if(WriteLen > MAX_BIN_DATA_SIZE)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwriteb64","too many bytes");
+                return 0;
+        }
+
+   
+        uint32_t BW;
+
+
+         FR = f_write (
+         &RemoteFile,
+         DataToWrite,
+         WriteLen,
+         (UINT *)&BW
+         );
+
+           if(FR!= FR_OK)
+           {
+                Output_JSON_Obj_FileResult(Shell,"fwriteb64",FRESULT_String[FR]);
+                f_close(&RemoteFile);
+                return (cmd_function_t)FR;
+           }
+
+        Output_JSON_Obj_FileResult(Shell,"fwriteb64",FRESULT_String[FR]);
+
+        f_close(&RemoteFile);
+
+        return 0;
+}
+
+
+
+
+cmd_function_t Remote_fwriteline(p_shell_context_t Shell,int32_t argc, char **argv)
+{
+        FRESULT FR;
+
+        char LineEnd[2] = {0xD,0xA};
+
+        if(argc < 3 )
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwriteline","fwriteline needs an argument");
+                return (cmd_function_t)-1;
+        }
+
+        FR = f_open(&RemoteFile, argv[1], FA_WRITE | FA_OPEN_APPEND);
+
+        if(FR!= FR_OK)
+        {
+                Output_JSON_Obj_FileResult(Shell,"fwriteline",FRESULT_String[FR]);
+                return (cmd_function_t)FR;
+        }
+
+        uint32_t BW;
+        uint32_t StrLen =  strlen(argv[2]);
+
+          FR = f_write (
+          &RemoteFile,
+          argv[2],
+          strlen(argv[2]),
+          (UINT *)&BW
+          );
+
+           if(FR!= FR_OK)
+           {
+                Output_JSON_Obj_FileResult(Shell,"fwriteline",FRESULT_String[FR]);
+                f_close(&RemoteFile);
+                return (cmd_function_t)FR;
+           }
+
+          FR = f_write (
+          &RemoteFile,
+          LineEnd,
+          2,
+          (UINT *)&BW
+          );
+
+           if(FR!= FR_OK)
+           {
+                Output_JSON_Obj_FileResult(Shell,"fwriteline",FRESULT_String[FR]);
+             //   fclose(&RemoteFile);
+                return (cmd_function_t)FR;
+           }
+
+
+         Output_JSON_Obj_FileResult(Shell,"fwriteline",FRESULT_String[FR]);
+
+        f_close(&RemoteFile);
+
+
+        return 0;
+}
+
+
+
+
+cmd_function_t md5check(p_shell_context_t Shell,int32_t argc, char **argv)
+{
+        FIL MD5_File;
+        uint8_t MD5_Buff[64];
+        unsigned char output[16];
+
+        char MD5_StringBuffer[48];
+
+        if(argc < 2 )
+        {
+                        Output_JSON_Obj_FileResult(Shell,"md5sum","md5sum needs an argument");
+                        return (cmd_function_t)-1;
+        }
+
+        FRESULT FR = f_open(&MD5_File, argv[1], FA_READ);
+
+        if(FR!= FR_OK)
+        {
+                Output_JSON_Obj_FileResult(Shell,"md5sum",FRESULT_String[FR]);
+                return (cmd_function_t)FR;
+        }
+
+        md5_context ctx;
+        md5_init( &ctx );
+        md5_starts( &ctx );
+
+        UINT BytesRead = 0;
+
+        while(!f_eof(&MD5_File))
+        {
+                System__FeedTheDog();
+
+                f_read(&MD5_File,MD5_Buff,sizeof(64),&BytesRead);
+
+                if(BytesRead)
+                {
+                        md5_update( &ctx, MD5_Buff, BytesRead );
+                }
+
+        }
+
+        f_close(&MD5_File);
+
+    md5_finish( &ctx, output );
+
+    md5_free( &ctx );
+
+    for(int i=0;i<16;i++)
+    {
+        sprintf(&MD5_StringBuffer[i*2],"%02x",output[i]);
+    }
+
+    MD5_StringBuffer[32] = 0;
+
+        Output_JSON_Obj_FileResult(Shell,"md5sum",MD5_StringBuffer);
+
+    SHELL_printf(Shell, "\r\n");
+
+        return 0;
+}
